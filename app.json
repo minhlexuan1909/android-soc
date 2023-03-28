@@ -1,0 +1,7 @@
+{
+  "name": "stw",
+  "displayName": "stw",
+  "expo": {
+    "entryPoint": "./index.native.js"
+  }
+}
