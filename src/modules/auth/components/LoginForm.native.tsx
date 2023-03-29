@@ -1,14 +1,15 @@
 import React from 'react';
 import {View, Button} from 'react-native';
 
-function LoginForm(): JSX.Element {
+function LoginForm({navigation}): JSX.Element {
   const handleLogin = () => {
     console.log('handleLogin');
+    navigation.navigate('Blank');
   };
 
   return (
     <View>
-      <Button onPress={handleLogin} title="Press Me" color="#841584" />
+      <Button onPress={handleLogin} title="Press" color="#841584" />
     </View>
   );
 }
