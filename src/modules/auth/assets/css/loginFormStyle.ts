@@ -5,6 +5,7 @@ export const FACEBOOK_COLOR = '#3b5998';
 
 export const style = StyleSheet.create({
   loginForm: {
+    backgroundColor: '#fff',
     display: 'flex',
     flexGrow: 1,
     flexDirection: 'column',

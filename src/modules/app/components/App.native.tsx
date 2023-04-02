@@ -1,10 +1,15 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+// @ts-ignore
 import {PersistGate} from 'lib-clevai-auth';
 import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
 import {reduxStoreConfig} from '../../base';
 import {LoginForm} from '../../auth';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {
+  DefaultTheme,
+  NavigationContainer,
+  useRoute,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {androidRoutes} from '../androidRoutes';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -16,7 +21,7 @@ const navTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'transparent',
+    background: '#f8f9fD',
   },
 };
 
