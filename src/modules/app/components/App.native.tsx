@@ -32,7 +32,7 @@ function App(): JSX.Element {
         <SafeAreaProvider>
           <NavigationContainer theme={navTheme}>
             <Stack.Navigator
-              initialRouteName="Login"
+              initialRouteName="Profile"
               screenOptions={{
                 headerShown: false,
               }}>

@@ -1,2 +1,3 @@
 import {AuthStackParamList} from '../auth';
-export type RootStackParamList = AuthStackParamList;
+import { ProfileStackParamList } from '../profile';
+export type RootStackParamList = AuthStackParamList & ProfileStackParamList;

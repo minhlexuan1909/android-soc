@@ -1,3 +1,4 @@
-import {BlankPage, LoginPage, authRoutes} from '../auth';
+import {authRoutes} from '../auth';
+import {profileRoutes} from '../profile';
 
-export const androidRoutes = [...authRoutes];
+export const androidRoutes = [...authRoutes, ...profileRoutes];
