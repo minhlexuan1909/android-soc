@@ -21,7 +21,7 @@ import {RootStackParamList} from '../../app/androidStackType';
 const MENU_OPTIONS: MenuItemType[] = [
   {
     icon: faHouse,
-    text: 'Login',
+    text: 'Home',
     linkTo: 'Login',
   },
   {
