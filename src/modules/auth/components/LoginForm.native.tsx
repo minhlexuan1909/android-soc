@@ -9,11 +9,17 @@ import {
   ScrollView,
 } from 'react-native';
 import {FACEBOOK_COLOR, style} from '../assets/css/loginFormStyle';
-import {commonStyle} from '../../base';
+import {DEFAULT_RIPPLE_COLOR, PillButton, commonStyle} from '../../base';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFacebookF, faGoogle} from '@fortawesome/free-brands-svg-icons';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../app/androidStackType';
 
-function LoginForm({navigation}): JSX.Element {
+type NavProps = NativeStackScreenProps<RootStackParamList, 'Blank'>;
+
+function LoginForm(): JSX.Element {
+  const navigation = useNavigation<NavProps['navigation']>();
   const handleLogin = () => {
     navigation.navigate('Blank');
   };
@@ -34,22 +40,20 @@ function LoginForm({navigation}): JSX.Element {
         style={[commonStyle.pill, style.loginInput]}
         placeholder="Password"
       />
-      <Pressable
-        style={[commonStyle.pill, commonStyle.primaryBtn, style.loginMainBtn]}>
+      <PillButton
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginMainBtn]}
+        onPress={handleLogin}>
         <Text style={commonStyle.primaryBtnText}>SIGN IN</Text>
-      </Pressable>
+      </PillButton>
       <View style={style.loginStrikeThroughText}>
         <View style={style.loginStrikeLine}></View>
         <Text style={style.loginOrText}>OR</Text>
         <View style={style.loginStrikeLine}></View>
       </View>
-      <Pressable
-        style={[
-          commonStyle.pill,
-          commonStyle.primaryBtn,
-          style.loginMainBtn,
-          style.loginFacebookBtn,
-        ]}>
+      <PillButton
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginFacebookBtn]}>
         <Text style={[commonStyle.primaryBtnText, style.loginFacebookText]}>
           <View>
             <FontAwesomeIcon
@@ -60,14 +64,10 @@ function LoginForm({navigation}): JSX.Element {
           </View>
           Sign in with Facebook
         </Text>
-      </Pressable>
-      <Pressable
-        style={[
-          commonStyle.pill,
-          commonStyle.primaryBtn,
-          style.loginMainBtn,
-          style.loginGoogleBtn,
-        ]}>
+      </PillButton>
+      <PillButton
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginGoogleBtn]}>
         <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
           <View>
             <FontAwesomeIcon
@@ -78,7 +78,7 @@ function LoginForm({navigation}): JSX.Element {
           </View>
           Sign in with Google
         </Text>
-      </Pressable>
+      </PillButton>
     </ScrollView>
   );
 }

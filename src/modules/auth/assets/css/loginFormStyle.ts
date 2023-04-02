@@ -6,6 +6,7 @@ export const FACEBOOK_COLOR = '#3b5998';
 export const style = StyleSheet.create({
   loginForm: {
     display: 'flex',
+    flexGrow: 1,
     flexDirection: 'column',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -23,9 +24,9 @@ export const style = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     width: '100%',
+    fontSize: 16,
   },
   loginMainBtn: {
-    width: '100%',
     marginBottom: 20,
   },
   loginStrikeThroughText: {
@@ -40,6 +41,7 @@ export const style = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     color: GREY_COLOR_6,
+    fontSize: 16,
   },
   loginStrikeLine: {
     backgroundColor: GREY_COLOR_6,
@@ -49,6 +51,7 @@ export const style = StyleSheet.create({
   loginFacebookText: {},
   loginFacebookBtn: {
     backgroundColor: FACEBOOK_COLOR,
+    marginBottom: 20,
   },
   loginFacebookIcon: {
     top: 2,
