@@ -1,55 +1,13 @@
-import {
-  faHouse,
-  faBorderAll,
-  faRibbon,
-  faCartShopping,
-  faGear,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  faInfo,
-  faArrowRightFromBracket,
-} from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
-import {View, FlatList, Alert} from 'react-native';
-import MenuItem from './MenuItem.native';
-import {MenuItemType} from '../utils';
-import {style} from '../assets/css/menuOptionsStyle';
+import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../app/androidStackType';
+import React from 'react';
+import {Alert, FlatList, View} from 'react-native';
 
-const MENU_OPTIONS: MenuItemType[] = [
-  {
-    icon: faHouse,
-    text: 'Home',
-    linkTo: 'Login',
-  },
-  {
-    icon: faBorderAll,
-    text: 'Category',
-    linkTo: 'Login',
-  },
-  {
-    icon: faRibbon,
-    text: 'Recommended',
-    linkTo: 'Login',
-  },
-  {
-    icon: faCartShopping,
-    text: 'My Order',
-    linkTo: 'Login',
-  },
-  {
-    icon: faGear,
-    text: 'Settings',
-    linkTo: 'Login',
-  },
-  {
-    icon: faInfo,
-    text: 'About',
-    linkTo: 'Login',
-  },
-];
+import {RootStackParamList} from '../../app/androidStackType';
+import {style} from '../assets/css/menuOptionsStyle';
+import MenuItem from './MenuItem.native';
+import {MENU_OPTIONS} from '../utils/constants';
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
 
