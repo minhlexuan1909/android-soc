@@ -22,9 +22,20 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../app/androidStackType';
 import {useDispatch, useSelector} from 'react-redux';
 import {TAuthState, TLoginRequest} from '../utils/types';
-import {login, setLoginErrorMessage} from '../redux/actions';
+import {login, registerPhone, setLoginErrorMessage} from '../redux/actions';
 import {LoadingView} from '../../base';
 import {Alert} from 'react-native';
+
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
+GoogleSignin.configure({
+  webClientId:
+    '823798145710-dllb888use9q8pc5m0ol0gke0p6t37of.apps.googleusercontent.com',
+});
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
 
@@ -68,6 +79,52 @@ function LoginForm(): JSX.Element {
     }
   }, [accessToken]);
 
+  async function onGoogleButtonPress() {
+    try {
+      // Check if your device supports Google Play
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      // Get the users ID token
+      const userInfo = await GoogleSignin.signIn();
+
+      console.log(userInfo);
+
+      // Create a Google credential with the token
+      // const googleCredential = auth.GoogleAuthProvider.credential(
+      //   userInfo?.idToken,
+      // );
+
+      // Sign-in the user with the credential
+      // return auth().signInWithCredential(googleCredential);
+      if (userInfo?.user.email && userInfo?.user.name) {
+        dispatch(
+          registerPhone({
+            email: userInfo?.user.email,
+            name: userInfo?.user.name,
+          }),
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  }
+
+  async function onGoogleButtonSignOutPress() {
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
@@ -110,21 +167,12 @@ function LoginForm(): JSX.Element {
       </View>
       <PillButton
         android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
-        btnStyle={[style.loginFacebookBtn]}>
-        <Text style={[commonStyle.primaryBtnText, style.loginFacebookText]}>
-          <View>
-            <FontAwesomeIcon
-              style={style.loginFacebookIcon}
-              color="#fff"
-              icon={faFacebookF}
-            />
-          </View>
-          Sign in with Facebook
-        </Text>
-      </PillButton>
-      <PillButton
-        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
-        btnStyle={[style.loginGoogleBtn]}>
+        btnStyle={[style.loginGoogleBtn]}
+        onPress={() =>
+          onGoogleButtonPress().then(() =>
+            console.log('Signed in with Google!'),
+          )
+        }>
         <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
           <View>
             <FontAwesomeIcon
@@ -134,6 +182,25 @@ function LoginForm(): JSX.Element {
             />
           </View>
           Sign in with Google
+        </Text>
+      </PillButton>
+      <PillButton
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginGoogleBtn]}
+        onPress={() =>
+          onGoogleButtonSignOutPress().then(() =>
+            console.log('Signed out with Google!'),
+          )
+        }>
+        <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
+          <View>
+            <FontAwesomeIcon
+              style={style.loginFacebookIcon}
+              color="#000"
+              icon={faGoogle}
+            />
+          </View>
+          Sign out with Google
         </Text>
       </PillButton>
     </ScrollView>

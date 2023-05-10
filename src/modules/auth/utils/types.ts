@@ -18,8 +18,9 @@ export type TLoginRequest = {
 
 export type TRegisterPhoneRequest = {
   name: string;
-  phone: string;
-  password: string;
+  phone?: string;
+  password?: string;
+  email?: string;
 };
 
 export type TGetPhoneOtpRequest = {
