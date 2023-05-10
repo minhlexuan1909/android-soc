@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Button,
@@ -8,23 +8,31 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {FACEBOOK_COLOR, style} from '../assets/css/loginFormStyle';
+import { FACEBOOK_COLOR, style } from '../assets/css/loginFormStyle';
 import {
   DEFAULT_RIPPLE_COLOR,
   PillButton,
   commonStyle,
   handleChangeFormInput,
 } from '../../base';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faFacebookF, faGoogle} from '@fortawesome/free-brands-svg-icons';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../app/androidStackType';
-import {useDispatch, useSelector} from 'react-redux';
-import {TAuthState, TLoginRequest} from '../utils/types';
-import {login, setLoginErrorMessage} from '../redux/actions';
-import {LoadingView} from '../../base';
-import {Alert} from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../app/androidStackType';
+import { useDispatch, useSelector } from 'react-redux';
+import { TAuthState, TLoginRequest } from '../utils/types';
+import { login, setLoginErrorMessage } from '../redux/actions';
+import { LoadingView } from '../../base';
+import { Alert } from 'react-native';
+
+
+import { GoogleSignin, statusCodes  } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
+GoogleSignin.configure({
+  webClientId: '823798145710-redtb86jltnoa0v8jlr2gaqanb0tgdi3.apps.googleusercontent.com',
+});
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
 
@@ -32,8 +40,8 @@ function LoginForm(): JSX.Element {
   const navigation = useNavigation<NavProps['navigation']>();
 
   const dispatch = useDispatch();
-  const {accessToken, isLogin, loginErrorMessage} = useSelector(
-    (state: {auth: TAuthState}) => state.auth,
+  const { accessToken, isLogin, loginErrorMessage } = useSelector(
+    (state: { auth: TAuthState }) => state.auth,
   );
 
   const [loginData, setLoginData] = useState<TLoginRequest>({
@@ -64,14 +72,37 @@ function LoginForm(): JSX.Element {
 
   useEffect(() => {
     if (accessToken) {
-      navigation.navigate('BottomTab', {screen: 'Home'});
+      navigation.navigate('BottomTab', { screen: 'Home' });
     }
   }, [accessToken]);
+
+  async function onGoogleButtonPress() {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+    } catch (error: any) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  }
 
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
       contentContainerStyle={style.loginForm}>
+      <Button
+        title="Google Sign-In"
+        onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+      />
       {isLogin && <LoadingView />}
       <Image
         style={style.loginLogo}
@@ -93,7 +124,7 @@ function LoginForm(): JSX.Element {
         }}
       />
       <PillButton
-        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
         btnStyle={[style.loginMainBtn]}
         onPress={handleLogin}>
         <Text style={commonStyle.primaryBtnText}>SIGN IN</Text>
@@ -109,7 +140,7 @@ function LoginForm(): JSX.Element {
         <View style={style.loginStrikeLine}></View>
       </View>
       <PillButton
-        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
         btnStyle={[style.loginFacebookBtn]}>
         <Text style={[commonStyle.primaryBtnText, style.loginFacebookText]}>
           <View>
@@ -123,7 +154,7 @@ function LoginForm(): JSX.Element {
         </Text>
       </PillButton>
       <PillButton
-        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
         btnStyle={[style.loginGoogleBtn]}>
         <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
           <View>
