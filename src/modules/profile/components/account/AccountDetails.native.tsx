@@ -22,6 +22,10 @@ const AccountDetails = () => {
       title: 'Phone number',
       value: accountDetails.phone,
     },
+    {
+      title: 'Address',
+      value: accountDetails.address,
+    },
   ];
   return (
     <View style={style.accountDetailWrapper}>
@@ -29,7 +33,7 @@ const AccountDetails = () => {
         <AccountSettingItem
           key={field.title}
           title={field.title}
-          value={field.value}
+          value={field.value ? field.value : ''}
         />
       ))}
     </View>

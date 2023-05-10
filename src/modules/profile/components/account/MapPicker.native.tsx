@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Image,
@@ -9,7 +9,10 @@ import {
 import MapView from 'react-native-maps';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {TextInput} from 'react-native-gesture-handler';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
+import {DEFAULT_RIPPLE_COLOR, PillButton, commonStyle} from '../../../base';
+import {useDispatch} from 'react-redux';
+import {updateMyInfo} from '../../redux/actions';
 
 const GOOGLE_API_KEY = 'AIzaSyBEe8j7b4qYzCSXHLZa5W6FvYBN2GM1gC0';
 
@@ -17,6 +20,8 @@ const latitudeDelta = 0.025;
 const longitudeDelta = 0.025;
 
 const MapPicker = () => {
+  const dispatch = useDispatch();
+
   const [region, setRegion] = useState({
     latitudeDelta,
     longitudeDelta,
@@ -31,14 +36,17 @@ const MapPicker = () => {
   const [currentLng, setCurrentLng] = useState('');
 
   let searchTextRef: any = null;
-  let mapView: any = null;
+  // let mapView: any = null;
+  const mapViewRef = useRef(null);
 
   const goToInitialLocation = (region: any) => {
     let initialRegion = Object.assign({}, region);
     initialRegion['latitudeDelta'] = 0.005;
     initialRegion['longitudeDelta'] = 0.005;
-    if (mapView) {
-      mapView.animateToRegion(initialRegion, 2000);
+    console.log(initialRegion);
+    if (mapViewRef.current) {
+      console.log(mapViewRef);
+      mapViewRef.current.animateToRegion(initialRegion, 2000);
     }
   };
 
@@ -51,10 +59,14 @@ const MapPicker = () => {
     getAddress(); //callback
   };
 
+  const handleSaveAddress = () => {
+    dispatch(updateMyInfo({address}));
+  };
+
   return (
     <View style={styles.map}>
       <MapView
-        ref={ref => (mapView = ref)}
+        ref={mapViewRef}
         onMapReady={() => goToInitialLocation(region)}
         style={styles.map}
         initialRegion={region}
@@ -66,16 +78,15 @@ const MapPicker = () => {
             styles.panelHeader,
             listViewDisplayed ? styles.panelFill : styles.panel,
           ]}>
-          .{' '}
           <GooglePlacesAutocomplete
             currentLocation={false}
             enableHighAccuracyLocation={true}
             ref={(c: any) => (searchTextRef = c)}
             placeholder="Search for a location"
             minLength={2} // minimum length of text to search
-            autoFocus={false}
-            returnKeyType={'search'}
-            listViewDisplayed={listViewDisplayed}
+            // autoFocus={false}
+            // returnKeyType={'search'}
+            // listViewDisplayed={listViewDisplayed}
             fetchDetails={true}
             renderDescription={(row: any) => row.description}
             enablePoweredByContainer={false}
@@ -103,8 +114,13 @@ const MapPicker = () => {
               //     longitude: details.geometry.location.lng,
               //   },
               // });
-              searchTextRef.setAddressText('');
-              goToInitialLocation(region);
+              // searchTextRef.setAddressText('');
+              goToInitialLocation({
+                latitudeDelta,
+                longitudeDelta,
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+              });
             }}
             textInputProps={{
               onChangeText: (text: any) => {
@@ -113,13 +129,9 @@ const MapPicker = () => {
                 setListViewDisplayed(true);
               },
             }}
-            getDefaultValue={() => {
-              return ''; // text input default value
-            }}
             query={{
-              key: '<YOUR_API_KEY>',
+              key: GOOGLE_API_KEY,
               language: 'en', // language of the results
-              components: 'country:ind',
             }}
             styles={{
               description: {
@@ -139,10 +151,6 @@ const MapPicker = () => {
               },
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
-            GooglePlacesSearchQuery={{
-              rankby: 'distance',
-              types: 'building',
-            }}
             filterReverseGeocodingByTypes={[
               'locality',
               'administrative_area_level_3',
@@ -153,20 +161,12 @@ const MapPicker = () => {
       </View>
       <View style={styles.markerFixed}>
         <Image
-          // style={styles.marker}
+          style={styles.marker}
           source={require('../../assets/image/pointer.png')}
         />
       </View>
       <KeyboardAvoidingView style={styles.footer}>
-        <View style={{flexDirection: 'row', margin: 10}}>
-          {/* <Icon name="ios-home"
- size={24}
- color="#DC2B6B"
- type="ionicon"
- style={{
-   padding: 10,
- }}
-/> */}
+        <View style={{flexDirection: 'row', marginVertical: 10}}>
           <Text style={styles.addressText}>Address</Text>
         </View>
         <TextInput
@@ -174,7 +174,7 @@ const MapPicker = () => {
           clearButtonMode="while-editing"
           style={{
             marginBottom: 5,
-            width: '90%',
+            width: '100%',
             minHeight: 70,
             alignSelf: 'center',
             borderColor: 'lightgrey',
@@ -189,30 +189,11 @@ const MapPicker = () => {
           onChangeText={(text: string) => setAddress(text)}
           value={address}
         />
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            width: '30%',
-            alignSelf: 'center',
-            alignItems: 'center',
-            backgroundColor: 'lightgreen',
-            borderRadius: 16.5,
-            shadowColor: 'rgba(0,0,0, .4)', // IOS
-            shadowOffset: {height: 1, width: 1}, // IOS
-            shadowOpacity: 1, // IOS
-            shadowRadius: 1, //IOS
-            elevation: 2, // Android
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'Calibri',
-              fontSize: 12,
-              paddingVertical: 4,
-            }}>
-            SAVE
-          </Text>
-        </TouchableOpacity>
+        <PillButton
+          android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+          onPress={handleSaveAddress}>
+          <Text style={commonStyle.primaryBtnText}>Save address</Text>
+        </PillButton>
       </KeyboardAvoidingView>
     </View>
   );
@@ -231,12 +212,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
   },
+  marker: {
+    height: 30,
+    width: 20,
+  },
   addressText: {
     color: 'black',
     margin: 3,
     fontFamily: 'Calibri',
   },
   footer: {
+    paddingHorizontal: 15,
     backgroundColor: 'white',
     bottom: 0,
     position: 'absolute',

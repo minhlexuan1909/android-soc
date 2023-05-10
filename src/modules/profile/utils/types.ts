@@ -24,13 +24,13 @@ export type TAccoutDetail = {
 };
 
 export type TMyInfo = {
-  email: string;
-  name: string;
-  address: string;
-  address_1: string;
-  address_2: string;
-  address_3: string;
-  phone: string;
+  email?: string;
+  name?: string;
+  address?: string;
+  address_1?: string;
+  address_2?: string;
+  address_3?: string;
+  phone?: string;
 };
 
 export type TProfileState = {

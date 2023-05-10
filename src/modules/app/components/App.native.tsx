@@ -81,7 +81,7 @@ function App(): JSX.Element {
           <GestureHandlerRootView style={{flex: 1}}>
             <NavigationContainer theme={navTheme}>
               <Stack.Navigator
-                initialRouteName="Login"
+                initialRouteName="Blank"
                 screenOptions={{
                   headerShown: false,
                 }}>

@@ -81,6 +81,7 @@ const handleRegisterPhone = async (
     } else {
     }
   } catch (err) {
+    console.log(err);
     dispatch(setIsRegisterPhone(false));
     dispatch(setRegisterPhoneErrorMessage(JSON.stringify(err.data)));
   }
