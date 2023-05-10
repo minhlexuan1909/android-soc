@@ -62,6 +62,7 @@ export const style = StyleSheet.create({
   },
   loginGoogleBtn: {
     backgroundColor: '#fff',
+    marginBottom: 20,
   },
   loginGoogleText: {
     color: '#000',

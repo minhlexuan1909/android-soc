@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Button,
@@ -8,30 +8,33 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { FACEBOOK_COLOR, style } from '../assets/css/loginFormStyle';
+import {FACEBOOK_COLOR, style} from '../assets/css/loginFormStyle';
 import {
   DEFAULT_RIPPLE_COLOR,
   PillButton,
   commonStyle,
   handleChangeFormInput,
 } from '../../base';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../app/androidStackType';
-import { useDispatch, useSelector } from 'react-redux';
-import { TAuthState, TLoginRequest } from '../utils/types';
-import { login, setLoginErrorMessage } from '../redux/actions';
-import { LoadingView } from '../../base';
-import { Alert } from 'react-native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faFacebookF, faGoogle} from '@fortawesome/free-brands-svg-icons';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../app/androidStackType';
+import {useDispatch, useSelector} from 'react-redux';
+import {TAuthState, TLoginRequest} from '../utils/types';
+import {login, registerPhone, setLoginErrorMessage} from '../redux/actions';
+import {LoadingView} from '../../base';
+import {Alert} from 'react-native';
 
-
-import { GoogleSignin, statusCodes  } from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
 GoogleSignin.configure({
-  webClientId: '823798145710-redtb86jltnoa0v8jlr2gaqanb0tgdi3.apps.googleusercontent.com',
+  webClientId:
+    '823798145710-dllb888use9q8pc5m0ol0gke0p6t37of.apps.googleusercontent.com',
 });
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
@@ -40,8 +43,8 @@ function LoginForm(): JSX.Element {
   const navigation = useNavigation<NavProps['navigation']>();
 
   const dispatch = useDispatch();
-  const { accessToken, isLogin, loginErrorMessage } = useSelector(
-    (state: { auth: TAuthState }) => state.auth,
+  const {accessToken, isLogin, loginErrorMessage} = useSelector(
+    (state: {auth: TAuthState}) => state.auth,
   );
 
   const [loginData, setLoginData] = useState<TLoginRequest>({
@@ -72,15 +75,34 @@ function LoginForm(): JSX.Element {
 
   useEffect(() => {
     if (accessToken) {
-      navigation.navigate('BottomTab', { screen: 'Home' });
+      navigation.navigate('BottomTab', {screen: 'Home'});
     }
   }, [accessToken]);
 
   async function onGoogleButtonPress() {
     try {
-      await GoogleSignin.hasPlayServices();
+      // Check if your device supports Google Play
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      // Get the users ID token
       const userInfo = await GoogleSignin.signIn();
+
       console.log(userInfo);
+
+      // Create a Google credential with the token
+      // const googleCredential = auth.GoogleAuthProvider.credential(
+      //   userInfo?.idToken,
+      // );
+
+      // Sign-in the user with the credential
+      // return auth().signInWithCredential(googleCredential);
+      if (userInfo?.user.email && userInfo?.user.name) {
+        dispatch(
+          registerPhone({
+            email: userInfo?.user.email,
+            name: userInfo?.user.name,
+          }),
+        );
+      }
     } catch (error: any) {
       console.log(error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -95,14 +117,18 @@ function LoginForm(): JSX.Element {
     }
   }
 
+  async function onGoogleButtonSignOutPress() {
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
       contentContainerStyle={style.loginForm}>
-      <Button
-        title="Google Sign-In"
-        onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-      />
       {isLogin && <LoadingView />}
       <Image
         style={style.loginLogo}
@@ -124,7 +150,7 @@ function LoginForm(): JSX.Element {
         }}
       />
       <PillButton
-        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
         btnStyle={[style.loginMainBtn]}
         onPress={handleLogin}>
         <Text style={commonStyle.primaryBtnText}>SIGN IN</Text>
@@ -140,22 +166,13 @@ function LoginForm(): JSX.Element {
         <View style={style.loginStrikeLine}></View>
       </View>
       <PillButton
-        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
-        btnStyle={[style.loginFacebookBtn]}>
-        <Text style={[commonStyle.primaryBtnText, style.loginFacebookText]}>
-          <View>
-            <FontAwesomeIcon
-              style={style.loginFacebookIcon}
-              color="#fff"
-              icon={faFacebookF}
-            />
-          </View>
-          Sign in with Facebook
-        </Text>
-      </PillButton>
-      <PillButton
-        android_ripple={{ color: DEFAULT_RIPPLE_COLOR }}
-        btnStyle={[style.loginGoogleBtn]}>
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginGoogleBtn]}
+        onPress={() =>
+          onGoogleButtonPress().then(() =>
+            console.log('Signed in with Google!'),
+          )
+        }>
         <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
           <View>
             <FontAwesomeIcon
@@ -165,6 +182,25 @@ function LoginForm(): JSX.Element {
             />
           </View>
           Sign in with Google
+        </Text>
+      </PillButton>
+      <PillButton
+        android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
+        btnStyle={[style.loginGoogleBtn]}
+        onPress={() =>
+          onGoogleButtonSignOutPress().then(() =>
+            console.log('Signed out with Google!'),
+          )
+        }>
+        <Text style={[commonStyle.primaryBtnText, style.loginGoogleText]}>
+          <View>
+            <FontAwesomeIcon
+              style={style.loginFacebookIcon}
+              color="#000"
+              icon={faGoogle}
+            />
+          </View>
+          Sign out with Google
         </Text>
       </PillButton>
     </ScrollView>

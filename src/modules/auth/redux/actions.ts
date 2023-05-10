@@ -46,7 +46,7 @@ export const setLoginErrorMessage = (message: string) => {
 
 export const registerPhone = (
   params: TRegisterPhoneRequest,
-): TActionRequest<TLoginRequest> => {
+): TActionRequest<TRegisterPhoneRequest> => {
   return {
     type: ACTION_TYPES.REGISTER_PHONE,
     params,
