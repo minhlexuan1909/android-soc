@@ -1,6 +1,7 @@
 import {ProfilePage} from '../pages';
 import AccountChangeDetailPage from '../pages/AccountChangeDetailPage';
 import AccountSettingPage from '../pages/AccountSettingPage.native';
+import MapPickerPage from '../pages/MapPickerPage.native';
 import SettingPage from '../pages/SettingPage.native';
 
 export const profileStackRoutes = [
@@ -22,5 +23,9 @@ export const settingStackRoutes = [
   {
     name: 'AccountChangeDetail',
     component: AccountChangeDetailPage,
+  },
+  {
+    name: 'MapPicker',
+    component: MapPickerPage,
   },
 ];

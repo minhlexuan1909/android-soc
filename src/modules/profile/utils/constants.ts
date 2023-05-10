@@ -52,7 +52,7 @@ export const SETTING_SECTION = [
       },
       {
         text: 'Address',
-        linkTo: '',
+        linkTo: 'MapPicker',
       },
     ],
   },

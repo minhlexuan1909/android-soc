@@ -22,9 +22,7 @@ export const getMyInfoError = (error: any) => {
   };
 };
 
-export const updateMyInfo = (
-  params: TAccoutDetail,
-): TActionRequest<TAccoutDetail> => {
+export const updateMyInfo = (params: TMyInfo): TActionRequest<TMyInfo> => {
   return {
     type: ACTION_TYPES.UPDATE_MY_INFO,
     params,
