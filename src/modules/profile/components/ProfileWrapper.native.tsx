@@ -2,13 +2,16 @@ import React from 'react';
 import {View} from 'react-native';
 import MenuOptions from './MenuOptions.native';
 import BriefInfo from './BriefInfo.native';
+import {ViewWithStatusBar} from '../../base';
 
 const ProfileWrapper = () => {
   return (
-    <View>
-      <BriefInfo />
-      <MenuOptions />
-    </View>
+    <ViewWithStatusBar>
+      <View>
+        <BriefInfo />
+        <MenuOptions />
+      </View>
+    </ViewWithStatusBar>
   );
 };
 

@@ -1,4 +1,18 @@
 import {authRoutes} from '../auth';
+import {baseRoutes} from '../base';
+import {orderRoutes} from '../order';
+import {productRoutes} from '../product';
 import {profileRoutes} from '../profile';
 
-export const androidRoutes = [...authRoutes, ...profileRoutes];
+console.log('androidRouté');
+export const androidRoutes: {
+  name: string;
+  component: any;
+  initialParams?: any;
+}[] = [
+  ...baseRoutes,
+  ...authRoutes,
+  ...profileRoutes,
+  ...productRoutes,
+  ...orderRoutes,
+];

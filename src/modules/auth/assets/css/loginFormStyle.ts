@@ -5,18 +5,19 @@ export const FACEBOOK_COLOR = '#3b5998';
 
 export const style = StyleSheet.create({
   loginForm: {
+    position: 'relative',
     backgroundColor: '#fff',
     display: 'flex',
     flexGrow: 1,
     flexDirection: 'column',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 100,
+    paddingTop: 50,
   },
   loginLogo: {
     width: 120,
     height: 100,
-    marginBottom: 70,
+    marginBottom: 50,
   },
   loginInput: {
     borderWidth: 1,
@@ -28,7 +29,8 @@ export const style = StyleSheet.create({
     fontSize: 16,
   },
   loginMainBtn: {
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
   loginStrikeThroughText: {
     padding: 10,
@@ -63,5 +65,9 @@ export const style = StyleSheet.create({
   },
   loginGoogleText: {
     color: '#000',
+  },
+  createAccountText: {
+    textDecorationLine: 'underline',
+    marginBottom: 15,
   },
 });

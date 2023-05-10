@@ -13,12 +13,12 @@ export const MENU_OPTIONS: MenuItemType[] = [
   {
     icon: faHouse,
     text: 'Home',
-    linkTo: 'Login',
+    linkTo: 'Home',
   },
   {
     icon: faBorderAll,
     text: 'Category',
-    linkTo: 'Login',
+    linkTo: 'Category',
   },
   {
     icon: faRibbon,
@@ -28,16 +28,32 @@ export const MENU_OPTIONS: MenuItemType[] = [
   {
     icon: faCartShopping,
     text: 'My Order',
-    linkTo: 'Login',
+    linkTo: 'Order',
   },
   {
     icon: faGear,
     text: 'Settings',
-    linkTo: 'Login',
+    linkTo: 'SettingStack',
   },
   {
     icon: faInfo,
     text: 'About',
     linkTo: 'Login',
+  },
+];
+
+export const SETTING_SECTION = [
+  {
+    sectionTitle: 'Account',
+    sectionOptions: [
+      {
+        text: 'Account & Privacy',
+        linkTo: 'Account',
+      },
+      {
+        text: 'Address',
+        linkTo: '',
+      },
+    ],
   },
 ];

@@ -1,3 +1,3 @@
 export type ProfileStackParamList = {
-  // Profile: undefined;
+  Setting: undefined;
 };

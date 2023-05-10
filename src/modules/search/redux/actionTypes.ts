@@ -1,0 +1,3 @@
+export const ACTION_TYPES = {
+  SET_SEARCH_CONDITION: Symbol('SET_SEARCH_CONDITION'),
+};

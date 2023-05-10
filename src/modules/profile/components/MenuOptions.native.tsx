@@ -8,10 +8,14 @@ import {RootStackParamList} from '../../app/androidStackType';
 import {style} from '../assets/css/menuOptionsStyle';
 import MenuItem from './MenuItem.native';
 import {MENU_OPTIONS} from '../utils/constants';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../base/redux/actions';
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
 
 const MenuOptions = () => {
+  const dispatch = useDispatch();
+
   const navigation = useNavigation<NavProps['navigation']>();
 
   const handleLogoutBtn = () => {
@@ -21,7 +25,10 @@ const MenuOptions = () => {
       },
       {
         text: 'OK',
-        onPress: () => navigation.navigate('Login'),
+        onPress: () => {
+          dispatch(logout());
+          navigation.navigate('Login');
+        },
       },
     ]);
   };

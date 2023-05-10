@@ -1,0 +1,34 @@
+- absolute pressble on press not work
+
+Before: 
+
+<View style={style.settingHeaderWrapper}>
+  <Pressable style={style.backBtn} onPressIn={handleBackBtn}> 
+    <FontAwesomeIcon icon={faArrowLeft} size={20} />
+  </Pressable>
+  <Text style={commonStyle.screenHeadingText}>Setting</Text>
+</View>
+
+Solution: Swap Text and Pressable place
+
+After: 
+
+<View style={style.settingHeaderWrapper}>
+  <Text style={commonStyle.screenHeadingText}>Setting</Text>
+  <Pressable style={style.backBtn} onPressIn={handleBackBtn}>
+    <FontAwesomeIcon icon={faArrowLeft} size={20} />
+  </Pressable>
+</View>
+
+
+- POST, PATCH but server got GET request
+
+=> Remember / at end of api url
+
+Before:
+
+/api/me
+
+After:
+
+/api/me/

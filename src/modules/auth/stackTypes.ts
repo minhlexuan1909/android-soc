@@ -1,4 +1,8 @@
 export type AuthStackParamList = {
   Login: undefined;
-  Blank: undefined;
+  Register: undefined;
+  PhoneOtp: {
+    phone: string;
+    email: string;
+  };
 };

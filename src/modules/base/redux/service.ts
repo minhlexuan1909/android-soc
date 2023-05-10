@@ -35,7 +35,7 @@ const api = (method: any, url: any, variables: any) => {
       })
       .catch(error => {
         if (error.response) {
-          reject(error);
+          reject(error.response.data);
         } else {
           reject(defaults.error);
         }
@@ -43,9 +43,9 @@ const api = (method: any, url: any, variables: any) => {
   });
 };
 
-export const init = (token: any, baseUrl: any) => {
-  axios.defaults.headers.common['Authorization'] = `${token}`;
-  axios.defaults.baseURL = baseUrl;
+export const init = (token: any) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // axios.defaults.baseURL = baseUrl;
 };
 
 export const Api = {

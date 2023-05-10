@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Button,
@@ -9,36 +9,88 @@ import {
   ScrollView,
 } from 'react-native';
 import {FACEBOOK_COLOR, style} from '../assets/css/loginFormStyle';
-import {DEFAULT_RIPPLE_COLOR, PillButton, commonStyle} from '../../base';
+import {
+  DEFAULT_RIPPLE_COLOR,
+  PillButton,
+  commonStyle,
+  handleChangeFormInput,
+} from '../../base';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFacebookF, faGoogle} from '@fortawesome/free-brands-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../app/androidStackType';
+import {useDispatch, useSelector} from 'react-redux';
+import {TAuthState, TLoginRequest} from '../utils/types';
+import {login, setLoginErrorMessage} from '../redux/actions';
+import {LoadingView} from '../../base';
+import {Alert} from 'react-native';
 
-type NavProps = NativeStackScreenProps<RootStackParamList, 'Blank'>;
+type NavProps = NativeStackScreenProps<RootStackParamList>;
 
 function LoginForm(): JSX.Element {
   const navigation = useNavigation<NavProps['navigation']>();
+
+  const dispatch = useDispatch();
+  const {accessToken, isLogin, loginErrorMessage} = useSelector(
+    (state: {auth: TAuthState}) => state.auth,
+  );
+
+  const [loginData, setLoginData] = useState<TLoginRequest>({
+    phone: '',
+    password: '',
+  });
+
   const handleLogin = () => {
-    navigation.navigate('Blank');
+    dispatch(login(loginData));
   };
+
+  const handleRegisterText = () => {
+    navigation.navigate('Register');
+  };
+
+  useEffect(() => {
+    if (loginErrorMessage) {
+      Alert.alert('', loginErrorMessage, [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(setLoginErrorMessage(''));
+          },
+        },
+      ]);
+    }
+  }, [loginErrorMessage]);
+
+  useEffect(() => {
+    if (accessToken) {
+      navigation.navigate('BottomTab', {screen: 'Home'});
+    }
+  }, [accessToken]);
 
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
       contentContainerStyle={style.loginForm}>
+      {isLogin && <LoadingView />}
       <Image
         style={style.loginLogo}
         source={require('../../base/assets/images/main-logo.jpg')}
       />
       <TextInput
         style={[commonStyle.pill, style.loginInput]}
-        placeholder="Email"
+        placeholder="Phone number"
+        onChangeText={(text: string) => {
+          handleChangeFormInput('phone', text, setLoginData);
+        }}
       />
       <TextInput
         style={[commonStyle.pill, style.loginInput]}
         placeholder="Password"
+        secureTextEntry={true}
+        onChangeText={(text: string) => {
+          handleChangeFormInput('password', text, setLoginData);
+        }}
       />
       <PillButton
         android_ripple={{color: DEFAULT_RIPPLE_COLOR}}
@@ -46,6 +98,11 @@ function LoginForm(): JSX.Element {
         onPress={handleLogin}>
         <Text style={commonStyle.primaryBtnText}>SIGN IN</Text>
       </PillButton>
+      <Pressable onPress={handleRegisterText}>
+        <Text style={style.createAccountText}>
+          Don't have account? Create one here
+        </Text>
+      </Pressable>
       <View style={style.loginStrikeThroughText}>
         <View style={style.loginStrikeLine}></View>
         <Text style={style.loginOrText}>OR</Text>
