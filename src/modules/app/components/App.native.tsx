@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Provider} from 'react-redux';
 
 import {StatusBar} from 'react-native';
@@ -28,7 +28,10 @@ import {
   GREY_COLOR_8,
   MAIN_COLOR,
 } from '../../base';
+import { getFCMToken, notificationListener, requestPermission } from '../../notifications';
 // @ts-ignore
+
+
 
 const {store, persistor} = reduxStoreConfig();
 
@@ -73,6 +76,13 @@ function BottomTab() {
 }
 
 function App(): JSX.Element {
+
+  useEffect(() => {
+    getFCMToken();
+    requestPermission();
+    notificationListener();
+  }, [])
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
