@@ -7,6 +7,8 @@ import {TCartState} from '../utils/types';
 const initState: TCartState = {
   zptranstoken: '',
   isCreateZlpOrderInfoSuccess: false,
+  isRefreshCart: false,
+  cart: {},
 };
 
 ReducerRegistry.register('cart', (state = initState, action: TAction) => {

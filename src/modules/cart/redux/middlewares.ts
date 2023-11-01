@@ -5,8 +5,8 @@ import {Store} from 'redux';
 import {TActionRequest} from '../../base';
 import {ACTION_TYPES} from './actionTypes';
 import {Dispatch} from 'redux';
-import {apiCreateZlpOrderInfo} from './services';
-import {createZlpOrderInfoSuccess} from './actions';
+import {apiCreateZlpOrderInfo, apiGetCart} from './services';
+import {createZlpOrderInfoSuccess, setIsRefreshCart} from './actions';
 
 /* eslint-disable no-empty */
 export const middleware =
@@ -17,6 +17,9 @@ export const middleware =
     switch (action.type) {
       case ACTION_TYPES.CREATE_ZLP_ORDER_INFO: {
         return await handleGetZlpOrderInfo(dispatch, action, getState);
+      }
+      case ACTION_TYPES.GET_CART: {
+        return await handleGetCart(dispatch, action, getState);
       }
     }
   };
@@ -35,6 +38,21 @@ const handleGetZlpOrderInfo = async (
       dispatch(createZlpOrderInfoSuccess(response));
     }
   } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleGetCart = async (
+  dispatch: Dispatch,
+  action: any,
+  getState: any,
+) => {
+  try {
+    dispatch(setIsRefreshCart(true));
+    const response = await apiGetCart();
+    dispatch(setIsRefreshCart(false));
+  } catch (error) {
+    dispatch(setIsRefreshCart(false));
     console.log(error);
   }
 };

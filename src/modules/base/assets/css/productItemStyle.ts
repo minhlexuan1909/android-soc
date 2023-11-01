@@ -13,7 +13,8 @@ export const style = StyleSheet.create({
     paddingHorizontal: 10,
   },
   productItemTitle: {
-    fontSize: 10,
+    height: 30,
+    fontSize: 11,
   },
   productItemPrice: {
     fontWeight: 'bold',

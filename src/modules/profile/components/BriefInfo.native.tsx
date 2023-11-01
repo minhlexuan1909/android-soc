@@ -1,8 +1,14 @@
 import React from 'react';
 import {View, Image, Text} from 'react-native';
 import {style} from '../assets/css/briefInfoStyle';
+import {useSelector} from 'react-redux';
+import {TProfileState} from '../utils';
 
 const BriefInfo = () => {
+  const {name, email} = useSelector(
+    (state: {profile: TProfileState}) => state.profile.me,
+  );
+
   const imgLink = '';
   return (
     <View style={style.briefInfoWrapper}>
@@ -17,8 +23,8 @@ const BriefInfo = () => {
         />
       </View>
       <View style={style.infoWrapper}>
-        <Text style={style.name}>Minh Le Xuan</Text>
-        <Text>minh@example.com</Text>
+        <Text style={style.name}>{name}</Text>
+        <Text>{email}</Text>
         <Text>Member Since: </Text>
       </View>
     </View>

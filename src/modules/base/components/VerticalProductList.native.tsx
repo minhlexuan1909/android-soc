@@ -5,44 +5,27 @@ import ProductItem from './ProductItem.native';
 
 type Props = {
   chosenCategory?: string;
+  productList?: any;
 };
 
 const VerticalProductList = (props: Props) => {
-  const {chosenCategory} = props;
+  const {chosenCategory, productList = []} = props;
+
   return (
     <View style={style.productListWrapper}>
       {chosenCategory && (
         <Text style={style.choosenCategory}>{chosenCategory}</Text>
       )}
       <View style={style.mainProductListWrapper}>
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
-        <ProductItem
-          title={'Nồi chiên không dầu 9L SUNHOUSE SUNHOUSE SUNHOUSE SUNHOUSE'}
-          price={'1200.00'}
-        />
+        {productList?.map((product: any) => (
+          <ProductItem
+            key={product?.id}
+            id={product?.id}
+            title={product?.title}
+            price={product?.price}
+            image={product?.image ? product?.image : ''}
+          />
+        ))}
       </View>
     </View>
   );

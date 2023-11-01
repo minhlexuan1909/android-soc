@@ -15,7 +15,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../app/androidStackType';
 import {useDispatch, useSelector} from 'react-redux';
 import {TAuthState} from '../utils/types';
-import {confirmPhoneOtp, getPhoneOtp} from '../redux/actions';
+import {confirmPhoneOtp, getPhoneOtp, setIsConfirmPhoneSuccess} from '../redux/actions';
 
 type NavProps = NativeStackScreenProps<RootStackParamList>;
 
@@ -46,6 +46,7 @@ const PhoneOtpForm = () => {
 
   useEffect(() => {
     if (isConfirmPhoneSuccess) {
+      dispatch(setIsConfirmPhoneSuccess(false));
       navigation.navigate('Login');
     }
   }, [isConfirmPhoneSuccess]);

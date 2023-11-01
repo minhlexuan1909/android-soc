@@ -25,12 +25,18 @@ const BlankPage = () => {
         console.log('process');
         InitAction.process(dispatch);
       }
-      navigation.navigate('Login');
+      console.log('accessToken', accessToken);
+      if (accessToken) {
+        console.log('HIiii');
+        navigation.navigate('BottomTab', {screen: 'Home'});
+      } else {
+        navigation.navigate('Login');
+      }
     }, 3000);
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [accessToken]);
   return (
     <View
       style={{

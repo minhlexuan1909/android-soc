@@ -4,12 +4,29 @@ import {StatusBar, View} from 'react-native';
 
 import SearchHeader from './SearchHeader.native';
 import SearchProduct from './SearchProduct.native';
-import {ViewWithStatusBar} from '../../base';
+import {LoadingView, ViewWithStatusBar} from '../../base';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {setSearchProducts} from '../redux/actions';
+import {TSearchState} from '../utils';
 
 const SearchWrapper = () => {
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
+
+  const {isSearching} = useSelector(
+    (state: {search: TSearchState}) => state.search,
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch(setSearchProducts([]));
+    };
+  }, []);
+
   return (
     <ViewWithStatusBar>
+      {isSearching && <LoadingView />}
       <View
         style={{
           height: '100%',

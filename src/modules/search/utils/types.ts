@@ -17,4 +17,6 @@ export type TSearchState = {
     order: 'asc' | 'desc';
     [key: string]: any;
   };
+  products: [];
+  isSearching: boolean;
 };

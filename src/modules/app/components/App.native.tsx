@@ -28,6 +28,7 @@ import {
   GREY_COLOR_8,
   MAIN_COLOR,
 } from '../../base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // @ts-ignore
 
 const {store, persistor} = reduxStoreConfig();
@@ -71,6 +72,10 @@ function BottomTab() {
     </Tab.Navigator>
   );
 }
+
+// clearAsyncStorage = async () => {
+AsyncStorage.clear();
+// };
 
 function App(): JSX.Element {
   return (

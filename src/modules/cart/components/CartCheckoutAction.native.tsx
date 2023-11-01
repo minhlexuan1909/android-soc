@@ -40,7 +40,7 @@ const CartCheckoutAction = () => {
       'EventPayZalo',
       data => {
         console.log(data);
-        if (data.returnCode === 1) {
+        if (data.returnCode === '1') {
           alert('Giao dịch thành công!');
         } else {
           alert('Giao dịch thất bại!');
@@ -62,7 +62,7 @@ const CartCheckoutAction = () => {
 
   const handleCheckoutBtn = () => {
     const app_id = 2554;
-    const app_trans_id = '230504_76';
+    const app_trans_id = '230510_77';
     const app_user = 'admin';
     const amount = totalPrice;
     const app_time = Date.now();
@@ -111,15 +111,15 @@ const CartCheckoutAction = () => {
 
   useEffect(() => {
     if (isCreateZlpOrderInfoSuccess) {
-      console.log('event pay');
-      payZaloBridgeEmitter.addListener('EventPayZalo', data => {
-        console.log(data);
-        if (data.returnCode === 1) {
-          alert('Giao dịch thành công!');
-        } else {
-          alert('Giao dịch thất bại!');
-        }
-      });
+      // console.log('event pay');
+      // payZaloBridgeEmitter.addListener('EventPayZalo', data => {
+      //   console.log(data);
+      //   if (data.returnCode === 1) {
+      //     alert('Giao dịch thành công!');
+      //   } else {
+      //     alert('Giao dịch thất bại!');
+      //   }
+      // });
       const payZP = NativeModules.PayZaloBridge;
       payZP.payOrder(zptranstoken);
     }

@@ -3,17 +3,23 @@ export type TAuthState = {
   refreshToken: string;
   loginErrorMessage: string;
   isLogin: boolean;
+  loginErrorCode: number;
   isRegisterPhone: boolean;
   isRegisterPhoneSuccess: boolean;
+  isRegisterGoogle: boolean;
+  isRegisterGoogleSuccess: boolean;
   registerPhoneErrorMessage: string;
+  isUpdatePhone: boolean;
+  isUpdatePhoneSuccess: boolean;
   isConfirmPhone: boolean;
   isConfirmPhoneSuccess: boolean;
   confirmPhoneErrorMessage: string;
 };
 
 export type TLoginRequest = {
-  phone: string;
-  password: string;
+  email?: string;
+  phone?: string;
+  password?: string;
 };
 
 export type TRegisterPhoneRequest = {
@@ -21,6 +27,11 @@ export type TRegisterPhoneRequest = {
   phone?: string;
   password?: string;
   email?: string;
+};
+
+export type TUpdatePhoneRequest = {
+  phone: string;
+  email: string;
 };
 
 export type TGetPhoneOtpRequest = {

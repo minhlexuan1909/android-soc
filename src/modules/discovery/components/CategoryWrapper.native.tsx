@@ -1,10 +1,28 @@
-import React from 'react';
-import {View, Image, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Image, Text, RefreshControl} from 'react-native';
 import ScreenHeader from '../../base/components/ScreenHeader.native';
 import LinearGradient from 'react-native-linear-gradient';
 import CategoryItem from './CategoryItem.native';
+import {useDispatch, useSelector} from 'react-redux';
+import {getTags} from '../redux/actions';
+import {TDiscoveryState} from '../utils';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const CategoryWrapper = () => {
+  const dispatch = useDispatch();
+
+  const {tags, isRefreshTag} = useSelector(
+    (state: {discovery: TDiscoveryState}) => state.discovery,
+  );
+
+  const handleRefreshTag = () => {
+    dispatch(getTags());
+  };
+
+  useEffect(() => {
+    dispatch(getTags());
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <ScreenHeader
@@ -13,16 +31,19 @@ const CategoryWrapper = () => {
         showBoxShadow={false}
       />
 
-      <View style={{paddingHorizontal: 20}}>
-        <CategoryItem
-          image="https://as2.ftcdn.net/v2/jpg/05/64/24/71/1000_F_564247106_JGzQ3iVqvJnLwdEyW01l1uCrH8Iefqo4.jpg"
-          title="Book"
-        />
-        <CategoryItem
-          image="https://as2.ftcdn.net/v2/jpg/05/64/24/71/1000_F_564247106_JGzQ3iVqvJnLwdEyW01l1uCrH8Iefqo4.jpg"
-          title="Book"
-        />
-      </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshTag}
+            onRefresh={handleRefreshTag}
+          />
+        }
+        style={{paddingHorizontal: 20}}>
+        {tags &&
+          tags.map((tag, index) => (
+            <CategoryItem key={tag.id} image={tag.image} title={tag.name} />
+          ))}
+      </ScrollView>
     </View>
   );
 };

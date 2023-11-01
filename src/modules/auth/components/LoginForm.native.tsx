@@ -22,7 +22,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../app/androidStackType';
 import {useDispatch, useSelector} from 'react-redux';
 import {TAuthState, TLoginRequest} from '../utils/types';
-import {login, registerPhone, setLoginErrorMessage} from '../redux/actions';
+import {
+  login,
+  registerGoogle,
+  registerPhone,
+  setIsRegisterGoogleSuccess,
+  setIsUpdatePhone,
+  setLoginErrorMessage,
+} from '../redux/actions';
 import {LoadingView} from '../../base';
 import {Alert} from 'react-native';
 
@@ -31,6 +38,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 GoogleSignin.configure({
   webClientId:
@@ -43,16 +51,23 @@ function LoginForm(): JSX.Element {
   const navigation = useNavigation<NavProps['navigation']>();
 
   const dispatch = useDispatch();
-  const {accessToken, isLogin, loginErrorMessage} = useSelector(
-    (state: {auth: TAuthState}) => state.auth,
-  );
+  const {
+    accessToken,
+    isLogin,
+    loginErrorCode,
+    loginErrorMessage,
+    isRegisterGoogleSuccess,
+  } = useSelector((state: {auth: TAuthState}) => state.auth);
 
+  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [loginData, setLoginData] = useState<TLoginRequest>({
     phone: '',
     password: '',
   });
 
   const handleLogin = () => {
+    dispatch(setLoginErrorMessage(''));
     dispatch(login(loginData));
   };
 
@@ -61,33 +76,53 @@ function LoginForm(): JSX.Element {
   };
 
   useEffect(() => {
-    if (loginErrorMessage) {
-      Alert.alert('', loginErrorMessage, [
-        {
-          text: 'OK',
-          onPress: () => {
-            dispatch(setLoginErrorMessage(''));
+    console.log('loginErrorMessage', loginErrorMessage);
+    console.log('loginErrorCode', loginErrorCode);
+    if (
+      loginErrorMessage === 'Email is not registered' &&
+      loginErrorCode === 401
+    ) {
+      dispatch(
+        registerGoogle({
+          email,
+          name,
+        }),
+      );
+    } else {
+      if (loginErrorMessage) {
+        Alert.alert('', loginErrorMessage, [
+          {
+            text: 'OK',
+            onPress: () => {
+              if (loginErrorCode === 400) {
+                navigation.navigate('UpdatePhone', {email});
+              } else if (
+                loginErrorCode === 403 &&
+                loginErrorMessage === 'User phone number is not verified'
+              ) {
+                navigation.navigate('UpdatePhone', {email});
+              }
+            },
           },
-        },
-      ]);
+        ]);
+      }
     }
-  }, [loginErrorMessage]);
 
-  useEffect(() => {
-    if (accessToken) {
-      navigation.navigate('BottomTab', {screen: 'Home'});
-    }
-  }, [accessToken]);
+    return () => {
+      dispatch(setLoginErrorMessage(''));
+    };
+  }, [loginErrorCode, loginErrorMessage]);
+
+  // dispatch(setIsUpdatePhone(false));
 
   async function onGoogleButtonPress() {
     try {
+      // Repick account
+      await GoogleSignin.signOut();
       // Check if your device supports Google Play
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       // Get the users ID token
       const userInfo = await GoogleSignin.signIn();
-
-      console.log(userInfo);
-
       // Create a Google credential with the token
       // const googleCredential = auth.GoogleAuthProvider.credential(
       //   userInfo?.idToken,
@@ -96,12 +131,9 @@ function LoginForm(): JSX.Element {
       // Sign-in the user with the credential
       // return auth().signInWithCredential(googleCredential);
       if (userInfo?.user.email && userInfo?.user.name) {
-        dispatch(
-          registerPhone({
-            email: userInfo?.user.email,
-            name: userInfo?.user.name,
-          }),
-        );
+        dispatch(login({email: userInfo?.user.email}));
+        setEmail(userInfo?.user.email);
+        setName(userInfo?.user.name);
       }
     } catch (error: any) {
       console.log(error);
@@ -124,6 +156,21 @@ function LoginForm(): JSX.Element {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    if (accessToken) {
+      navigation.navigate('Blank');
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (isRegisterGoogleSuccess) {
+      dispatch(setIsRegisterGoogleSuccess(false));
+      navigation.navigate('UpdatePhone', {
+        email,
+      });
+    }
+  }, [isRegisterGoogleSuccess]);
 
   return (
     <ScrollView

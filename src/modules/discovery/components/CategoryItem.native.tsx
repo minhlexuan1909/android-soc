@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {style} from '../assets/css/categoryItemStyle';
 
 type Props = {
-  image: string;
+  image: string | null;
   title: string;
 };
 
@@ -13,15 +13,23 @@ const CategoryItem = (props: Props) => {
 
   return (
     <View style={style.wrapper}>
-      <Image
-        style={{
-          width: '100%',
-          height: 150,
-        }}
-        source={{
-          uri: image,
-        }}
-      />
+      {image ? (
+        <Image
+          style={{
+            width: '100%',
+            height: 150,
+          }}
+          source={{uri: image}}
+        />
+      ) : (
+        <Image
+          style={{
+            width: '100%',
+            height: 150,
+          }}
+          source={require('../../base/assets/images/default-product-image.jpg')}
+        />
+      )}
 
       <View style={style.shadowWrapper}>
         <LinearGradient

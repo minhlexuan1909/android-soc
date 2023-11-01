@@ -9,10 +9,15 @@ const initState: TAuthState = {
   accessToken: '',
   refreshToken: '',
   isLogin: false,
+  loginErrorCode: 0,
   loginErrorMessage: '',
   isRegisterPhone: false,
   isRegisterPhoneSuccess: false,
+  isRegisterGoogle: false,
+  isRegisterGoogleSuccess: false,
   registerPhoneErrorMessage: '',
+  isUpdatePhone: false,
+  isUpdatePhoneSuccess: false,
   isConfirmPhone: false,
   isConfirmPhoneSuccess: false,
   confirmPhoneErrorMessage: '',
@@ -28,10 +33,11 @@ ReducerRegistry.register('auth', (state = initState, action: TAction) => {
       };
     }
     case ACTION_TYPES.LOGIN_ERROR: {
-      const reponse: TResponse<TLoginError> = action.response;
+      // const reponse: TResponse<TLoginError> = action.response;
       return {
         ...state,
-        loginErrorMessage: reponse.data.detail,
+        loginErrorCode: action.response.status,
+        loginErrorMessage: action.response.message,
       };
     }
     case ACTION_TYPES.SET_IS_LOGIN: {
@@ -39,6 +45,13 @@ ReducerRegistry.register('auth', (state = initState, action: TAction) => {
       return {
         ...state,
         isLogin: response,
+      };
+    }
+    case ACTION_TYPES.SET_LOGIN_ERROR_CODE: {
+      const response: number = action.response;
+      return {
+        ...state,
+        loginErrorCode: response,
       };
     }
     case ACTION_TYPES.SET_LOGIN_ERROR_MESSAGE: {
@@ -90,9 +103,39 @@ ReducerRegistry.register('auth', (state = initState, action: TAction) => {
         confirmPhoneErrorMessage: response,
       };
     }
+    case ACTION_TYPES.SET_IS_REGISTER_GOOGLE: {
+      const response: boolean = action.response;
+      return {
+        ...state,
+        isRegisterGoogle: response,
+      };
+    }
+    case ACTION_TYPES.SET_IS_REGISTER_GOOGLE_SUCCESS: {
+      const response: boolean = action.response;
+      return {
+        ...state,
+        isRegisterGoogleSuccess: response,
+      };
+    }
+
+    case ACTION_TYPES.SET_IS_UPDATE_PHONE: {
+      const response: boolean = action.response;
+      return {
+        ...state,
+        isUpdatePhone: response,
+      };
+    }
+    case ACTION_TYPES.SET_IS_UPDATE_PHONE_SUCCESS: {
+      const response: boolean = action.response;
+      return {
+        ...state,
+        isUpdatePhoneSuccess: response,
+      };
+    }
     case COMMON_ACTION_TYPES.LOGOUT: {
       return {...initState};
     }
+
     default:
       return state;
   }

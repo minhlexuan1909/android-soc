@@ -20,3 +20,16 @@ export const createZlpOrderInfoError = (error: any) => {
     error,
   };
 };
+
+export const setIsRefreshCart = (isRefreshCart: boolean) => {
+  return {
+    type: ACTION_TYPES.SET_IS_REFRESH_CART,
+    response: isRefreshCart,
+  };
+};
+
+export const getCart = () => {
+  return {
+    type: ACTION_TYPES.GET_CART,
+  };
+};

@@ -1,7 +1,7 @@
 // @ts-ignore
 import {Store} from 'redux';
 
-import {TActionRequest, TResponse} from '../../base';
+import {TActionRequest, TResponse, init} from '../../base';
 import {ACTION_TYPES} from './actionTypes';
 import {Dispatch} from 'redux';
 import {
@@ -9,14 +9,20 @@ import {
   apiGetPhoneOtp,
   apiLogin,
   apiRegisterPhone,
+  apiUpdatePhone,
 } from './services';
 import {
   loginError,
   loginSuccess,
   setIsConfirmPhoneSuccess,
   setIsLogin,
+  setIsRegisterGoogle,
+  setIsRegisterGoogleSuccess,
   setIsRegisterPhone,
   setIsRegisterPhoneSuccess,
+  setIsUpdatePhone,
+  setIsUpdatePhoneSuccess,
+  setLoginErrorCode,
   setLoginErrorMessage,
   setRegisterPhoneErrorMessage,
 } from './actions';
@@ -39,6 +45,12 @@ export const middleware =
       case ACTION_TYPES.REGISTER_PHONE: {
         return await handleRegisterPhone(dispatch, action, getState);
       }
+      case ACTION_TYPES.REGISTER_GOOGLE: {
+        return await handleRegisterGoogle(dispatch, action, getState);
+      }
+      case ACTION_TYPES.UPDATE_PHONE: {
+        return await handleUpdatePhone(dispatch, action, getState);
+      }
       case ACTION_TYPES.GET_PHONE_OTP: {
         return await handleGetPhoneOtp(dispatch, action, getState);
       }
@@ -56,14 +68,20 @@ const handleLogin = async (dispatch: Dispatch, action: any, getState: any) => {
     const response = await apiLogin(action.params);
     dispatch(setIsLogin(false));
     if (response.status === 200) {
+      init(response.data.access);
       dispatch(loginSuccess(response as TResponse<TLoginResponse>));
     } else {
       dispatch(loginError(response as TResponse<TLoginError>));
     }
   } catch (err) {
     dispatch(setIsLogin(false));
-    dispatch(setLoginErrorMessage(err.message));
-    console.log(err);
+    dispatch({
+      type: ACTION_TYPES.LOGIN_ERROR,
+      response: err,
+    });
+    // dispatch(setLoginErrorMessage(err.message));
+    // dispatch(setLoginErrorCode(err.status));
+    console.log('message', err.message);
   }
 };
 
@@ -85,6 +103,39 @@ const handleRegisterPhone = async (
     dispatch(setIsRegisterPhone(false));
     dispatch(setRegisterPhoneErrorMessage(JSON.stringify(err.data)));
   }
+};
+
+const handleRegisterGoogle = async (
+  dispatch: Dispatch,
+  action: any,
+  getState: any,
+) => {
+  try {
+    dispatch(setIsRegisterGoogle(true));
+    const response = await apiRegisterPhone(action.params);
+    dispatch(setIsRegisterGoogle(false));
+    if (response.status === 201) {
+      dispatch(setIsRegisterGoogleSuccess(true));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const handleUpdatePhone = async (
+  dispatch: Dispatch,
+  action: any,
+  getState: any,
+) => {
+  try {
+    dispatch(setIsUpdatePhone(true));
+    const response = await apiUpdatePhone(action.params);
+    dispatch(setIsUpdatePhone(false));
+    if (response.status === 200) {
+      dispatch(setIsUpdatePhoneSuccess(true));
+    } else {
+    }
+  } catch (err) {}
 };
 
 const handleGetPhoneOtp = async (

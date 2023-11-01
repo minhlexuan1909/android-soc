@@ -1,1 +1,8 @@
-export const ACTION_TYPES = {};
+export const ACTION_TYPES = {
+  GET_PRODUCTS: Symbol('GET_PRODUCTS'),
+  SET_PRODUCTS: Symbol('SET_PRODUCTS'),
+
+  GET_TAGS: Symbol('GET_TAGS'),
+  SET_TAGS: Symbol('SET_TAGS'),
+  SET_IS_REFRESH_TAG: Symbol('SET_IS_REFRESH_TAG'),
+};

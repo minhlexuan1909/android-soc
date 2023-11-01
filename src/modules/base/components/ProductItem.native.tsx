@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NavProps} from '../../app/androidStackType';
 
 type Props = {
+  id: number;
   style?: object[];
   image?: string;
   title: string;
@@ -14,7 +15,7 @@ type Props = {
 const gapSize = 5;
 
 const ProductItem = (props: Props) => {
-  const {style = [], image, title, price} = props;
+  const {id, style = [], image, title, price} = props;
 
   const navigation = useNavigation<NavProps['navigation']>();
 
@@ -27,7 +28,7 @@ const ProductItem = (props: Props) => {
 
   const handlePressProduct = () => {
     navigation.navigate('Product', {
-      productId: 1,
+      productId: id,
     });
   };
 
@@ -42,17 +43,23 @@ const ProductItem = (props: Props) => {
       <Pressable
         style={productItemStyle.productItemWrapper}
         onPress={handlePressProduct}>
-        <Image
-          style={[
-            productItemStyle.productItemImage,
-            {width: imageSize, height: imageSize},
-          ]}
-          source={
-            image
-              ? {uri: image}
-              : require('../../base/assets/images/default-product-image.jpg')
-          }
-        />
+        {image ? (
+          <Image
+            style={[
+              productItemStyle.productItemImage,
+              {width: imageSize, height: imageSize},
+            ]}
+            source={{uri: image}}
+          />
+        ) : (
+          <Image
+            style={[
+              productItemStyle.productItemImage,
+              {width: imageSize, height: imageSize},
+            ]}
+            source={require('../../base/assets/images/default-product-image.jpg')}
+          />
+        )}
         <View style={productItemStyle.productItemTextWrapper}>
           <Text style={productItemStyle.productItemTitle} numberOfLines={2}>
             {title}

@@ -20,3 +20,7 @@ export const apiConfirmPhoneOtp = (params: TConfirmPhoneOtpRequest) => {
 export const apiGetPhoneOtp = (params: string) => {
   return Api.post(`${USER_SERVICES_BASE_URL}/api/phone-otp/`, params);
 };
+
+export const apiUpdatePhone = (params: string) => {
+  return Api.patch(`${USER_SERVICES_BASE_URL}/api/phone/`, params);
+};

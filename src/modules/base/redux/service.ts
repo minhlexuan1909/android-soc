@@ -44,7 +44,9 @@ const api = (method: any, url: any, variables: any) => {
 };
 
 export const init = (token: any) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
   // axios.defaults.baseURL = baseUrl;
 };
 

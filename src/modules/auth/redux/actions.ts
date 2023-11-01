@@ -6,6 +6,7 @@ import {
   TLoginRequest,
   TLoginResponse,
   TRegisterPhoneRequest,
+  TUpdatePhoneRequest,
 } from '../utils/types';
 import {ACTION_TYPES} from './actionTypes';
 
@@ -43,6 +44,12 @@ export const setLoginErrorMessage = (message: string) => {
     response: message,
   };
 };
+export const setLoginErrorCode = (code: number) => {
+  return {
+    type: ACTION_TYPES.SET_LOGIN_ERROR_CODE,
+    response: code,
+  };
+};
 
 export const registerPhone = (
   params: TRegisterPhoneRequest,
@@ -50,6 +57,31 @@ export const registerPhone = (
   return {
     type: ACTION_TYPES.REGISTER_PHONE,
     params,
+  };
+};
+
+export const registerGoogle = (
+  params: TRegisterPhoneRequest,
+): TActionRequest<TRegisterPhoneRequest> => {
+  return {
+    type: ACTION_TYPES.REGISTER_GOOGLE,
+    params,
+  };
+};
+
+export const setIsRegisterGoogle = (isRegisterGoogle: boolean) => {
+  return {
+    type: ACTION_TYPES.SET_IS_REGISTER_GOOGLE,
+    response: isRegisterGoogle,
+  };
+};
+
+export const setIsRegisterGoogleSuccess = (
+  isRegisterGoogleSuccess: boolean,
+) => {
+  return {
+    type: ACTION_TYPES.SET_IS_REGISTER_GOOGLE_SUCCESS,
+    response: isRegisterGoogleSuccess,
   };
 };
 
@@ -71,6 +103,27 @@ export const setRegisterPhoneErrorMessage = (message: string) => {
   return {
     type: ACTION_TYPES.SET_REGISTER_PHONE_ERROR_MESSAGE,
     response: message,
+  };
+};
+
+export const updatePhone = (params: TUpdatePhoneRequest) => {
+  return {
+    type: ACTION_TYPES.UPDATE_PHONE,
+    params,
+  };
+};
+
+export const setIsUpdatePhone = (isUpdatePhone: boolean) => {
+  return {
+    type: ACTION_TYPES.SET_IS_UPDATE_PHONE,
+    response: isUpdatePhone,
+  };
+};
+
+export const setIsUpdatePhoneSuccess = (isUpdatePhoneSuccess: boolean) => {
+  return {
+    type: ACTION_TYPES.SET_IS_UPDATE_PHONE_SUCCESS,
+    response: isUpdatePhoneSuccess,
   };
 };
 
